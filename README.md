@@ -1,6 +1,5 @@
 # Amazon EKS Blueprints for Terraform
 
-[![e2e-terratest](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/e2e-terratest.yml/badge.svg)](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/e2e-terratest.yml)
 [![plan-examples](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/plan-examples.yml/badge.svg)](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/plan-examples.yml)
 [![pre-commit](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/pre-commit.yaml/badge.svg)](https://github.com/aws-ia/terraform-aws-eks-blueprints/actions/workflows/pre-commit.yaml)
 
