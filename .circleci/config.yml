@@ -104,6 +104,7 @@ jobs:
           command: |
             cd examples/eks-cluster-with-new-vpc
             terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
+
   destroy-addons:
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
