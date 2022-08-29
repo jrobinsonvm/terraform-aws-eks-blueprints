@@ -16,6 +16,16 @@ provider "helm" {
   }
 }
 
+terraform {
+  cloud {
+    organization = "HomeLab-of-James"
+
+    workspaces {
+      name = "NonProd"
+    }
+  }
+}    
+    
 data "aws_eks_cluster_auth" "this" {
   name = module.eks_blueprints.eks_cluster_id
 }
