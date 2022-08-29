@@ -23,7 +23,8 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name = basename(path.cwd)
+  name = "eks-xyz-123"
+#  name = basename(path.cwd)
   # var.cluster_name is for Terratest
   cluster_name = coalesce(var.cluster_name, local.name)
   region       = "us-east-2"
