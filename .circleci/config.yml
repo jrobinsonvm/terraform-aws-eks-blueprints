@@ -18,6 +18,24 @@ jobs:
           paths:
             - .
 
+  apply:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform apply -target="module.vpc"  -auto-approve tfapply
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfapply 
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply 
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
   plan-destroy:
     docker:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
@@ -57,7 +75,9 @@ workflows:
           type: approval
           requires:
             - plan-apply
-      - plan-destroy
+      - plan-destroy:
+          requires:
+            - hold-apply
       - hold-destroy:
           type: approval
           requires:
