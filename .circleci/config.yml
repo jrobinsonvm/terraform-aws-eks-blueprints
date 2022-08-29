@@ -141,7 +141,7 @@ workflows:
             - apply-eks
       - plan-destroy:
           requires:
-            - apply-vpc
+            - apply-addons
       - hold-destroy:
           type: approval
           requires:
