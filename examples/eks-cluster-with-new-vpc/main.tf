@@ -55,7 +55,7 @@ module "eks_blueprints" {
     mg_5 = {
       node_group_name = "managed-ondemand"
       instance_types  = ["t3.medium"]
-      min_size        = 1
+      min_size        = 2
       subnet_ids      = module.vpc.private_subnets
     }
   }
@@ -83,7 +83,9 @@ module "eks_blueprints_kubernetes_addons" {
   enable_cluster_autoscaler           = true
   enable_aws_cloudwatch_metrics       = true
   enable_kubecost                     = true
-
+  enable_ingress_nginx                = true
+  enable_tetrate_istio                = true
+    
   enable_cert_manager = true
   cert_manager_helm_config = {
     set_values = [
