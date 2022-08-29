@@ -12,7 +12,7 @@ jobs:
           command: |
             cd examples/eks-cluster-with-new-vpc
             terraform init -input=false
-            terraform plan -out tfapply -var-file terraform.tfvars
+            terraform plan -out tfapply
       - persist_to_workspace:
           root: .
           paths:
@@ -44,7 +44,7 @@ jobs:
           name: terraform create destroy plan
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -destroy -out tfdestroy -var-file terraform.tfvars
+            terraform plan -destroy -out tfdestroy  
       - persist_to_workspace:
           root: .
           paths:
