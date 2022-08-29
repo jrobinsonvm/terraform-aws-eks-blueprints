@@ -46,19 +46,21 @@ module "eks_blueprints" {
   source = "../.."
 
   cluster_name    = local.cluster_name
-  cluster_version = "1.23"
+  cluster_version = "1.21"
   vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = ["subnet-001be750ae2eff796", "subnet-012fb8263f3003266", "subnet-0c14fe32d77b16d6b"]
 
-  private_subnet_ids = module.vpc.private_subnets
-
+    
   managed_node_groups = {
-    mg_5 = {
+    mg_m5 = {
       node_group_name = "managed-ondemand"
       instance_types  = ["t3.medium"]
-      min_size        = 2
-      subnet_ids      = module.vpc.private_subnets
+      min_size        = 2      
+      subnet_ids      = ["subnet-0d4781b4236265008", "subnet-08a89c6042b9325b9", "subnet-09c9de9c9399bfe81"]
     }
   }
+}
+    
 
   tags = local.tags
 }
