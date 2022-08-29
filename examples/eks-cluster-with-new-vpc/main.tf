@@ -32,6 +32,8 @@ locals {
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
+  vpc_id             = "vpc-0830955e5c3d69ecd"  
+  
   tags = {
     Blueprint  = local.name
     GithubRepo = "github.com/aws-ia/terraform-aws-eks-blueprints"
@@ -48,7 +50,10 @@ module "eks_blueprints" {
   cluster_name    = local.cluster_name
   cluster_version = "1.23"
 
-  vpc_id             = module.vpc.vpc_id
+#   vpc_id             = module.vpc.vpc_id
+
+  vpc_id             = local.vpc_id
+
   private_subnet_ids = module.vpc.private_subnets
 
   managed_node_groups = {
