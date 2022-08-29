@@ -19,10 +19,8 @@ provider "helm" {
 terraform {
   cloud {
     organization = "HomeLab-of-James"
-
-    workspaces {
-      name = "NonProd"
-    }
+    workspace = "NonProd"
+    
   }
 }    
     
