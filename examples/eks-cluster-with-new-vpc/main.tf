@@ -47,7 +47,7 @@ module "eks_blueprints" {
 
   cluster_name    = local.cluster_name
   cluster_version = "1.21"
-  vpc_id             = module.vpc.vpc_id
+  vpc_id             = "vpc-0f9162b8d65804c8e"
   private_subnet_ids = ["subnet-001be750ae2eff796", "subnet-012fb8263f3003266", "subnet-0c14fe32d77b16d6b"]
 
     
