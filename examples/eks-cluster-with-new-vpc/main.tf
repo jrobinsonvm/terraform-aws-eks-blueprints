@@ -82,7 +82,7 @@ module "eks_blueprints_kubernetes_addons" {
   enable_metrics_server               = true
   enable_cluster_autoscaler           = true
   enable_aws_cloudwatch_metrics       = true
-  enable_kubecost                     = true
+#   enable_kubecost                     = true
   enable_ingress_nginx                = true
   enable_tetrate_istio                = true
     
