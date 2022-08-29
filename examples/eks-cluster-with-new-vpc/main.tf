@@ -23,7 +23,7 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name = "eks-lab-dev"
+  name = "eks-lab-nonprod"
 #  name = basename(path.cwd)
   # var.cluster_name is for Terratest
   cluster_name = coalesce(var.cluster_name, local.name)
@@ -55,7 +55,7 @@ module "eks_blueprints" {
     mg_5 = {
       node_group_name = "managed-ondemand"
       instance_types  = ["t3.medium"]
-      min_size        = 2
+      min_size        = 1
       subnet_ids      = module.vpc.private_subnets
     }
   }
