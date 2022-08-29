@@ -13,9 +13,6 @@ jobs:
             cd examples/eks-cluster-with-new-vpc
             terraform init -input=false
             terraform plan -target="module.vpc" -out tfapply-vpc
-            terraform plan -target="module.eks_blueprints" -out tfapply-eks
-            terraform plan -target="module.eks_blueprints_kubernetes_addons" -out tfapply-addons
-
       - persist_to_workspace:
           root: .
           paths:
@@ -46,6 +43,7 @@ jobs:
           name: terraform-apply-eks
           command: |
             cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints" -out tfapply-eks
             terraform apply -target="module.eks_blueprints"   -auto-approve tfapply-eks
       - persist_to_workspace:
           root: .
@@ -62,6 +60,7 @@ jobs:
           name: terraform-apply-addons
           command: |
             cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints_kubernetes_addons" -out tfapply-addons
             terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply-addons
       - persist_to_workspace:
           root: .
