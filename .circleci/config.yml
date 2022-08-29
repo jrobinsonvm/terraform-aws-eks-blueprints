@@ -136,9 +136,9 @@ workflows:
       - apply-eks:
           requires:
             - apply-vpc
-      # - apply-addons:
-      #     requires:
-      #       - apply-eks
+      - apply-addons:
+          requires:
+            - apply-eks
       - plan-destroy:
           requires:
             - apply-eks
