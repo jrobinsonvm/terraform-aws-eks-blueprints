@@ -139,6 +139,10 @@ workflows:
       - apply-addons:
           requires:
             - apply-eks
+      - hold-destroy:
+          type: approval
+          requires:
+            - apply-addons
       - plan-destroy:
           requires:
             - apply-eks
