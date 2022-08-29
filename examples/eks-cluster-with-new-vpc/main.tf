@@ -23,8 +23,8 @@ data "aws_eks_cluster_auth" "this" {
 data "aws_availability_zones" "available" {}
 
 locals {
-  name = "eks-lab-nonprod"
-#  name = basename(path.cwd)
+#  name = "eks-lab-nonprod"
+  name = basename(path.cwd)
   # var.cluster_name is for Terratest
   cluster_name = coalesce(var.cluster_name, local.name)
   region       = "us-east-2"
@@ -32,7 +32,7 @@ locals {
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
-  vpc_id             = "vpc-0830955e5c3d69ecd"  
+  vpc_id             = coalesce(var.cluster_name, local.name)
   
   tags = {
     Blueprint  = local.name
