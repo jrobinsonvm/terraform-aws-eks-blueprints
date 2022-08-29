@@ -1,6 +1,22 @@
 version: 2
 
 jobs:
+  plan-apply:
+    working_directory: /tmp/project
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform init & plan
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform init -input=false
+            terraform plan -out tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
 
   plan-destroy:
     docker:
@@ -28,11 +44,19 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -auto-approve tfdestroy
+            terraform apply -target="module.vpc"  -auto-approve tfdestroy
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy
+
 workflows:
   version: 2
   plan_approve_apply:
     jobs:
+      - plan-apply
+      - hold-apply:
+          type: approval
+          requires:
+            - plan-apply
       - plan-destroy
       - hold-destroy:
           type: approval
