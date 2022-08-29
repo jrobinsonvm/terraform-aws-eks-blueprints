@@ -112,7 +112,7 @@ module "vpc" {
   name = local.name
   cidr = local.vpc_cidr
 
-  azs             = "us-east-2"
+  azs             = local.azs
   public_subnets  = ["subnet-0d4781b4236265008", "subnet-08a89c6042b9325b9", "subnet-09c9de9c9399bfe81"]
   private_subnets = ["subnet-001be750ae2eff796", "subnet-012fb8263f3003266", "subnet-0c14fe32d77b16d6b"]
 
