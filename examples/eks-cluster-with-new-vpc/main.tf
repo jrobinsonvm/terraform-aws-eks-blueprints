@@ -59,7 +59,7 @@ module "eks_blueprints" {
       subnet_ids      = ["subnet-0d4781b4236265008", "subnet-08a89c6042b9325b9", "subnet-09c9de9c9399bfe81"]
     }
   }
-}
+
     
 
   tags = local.tags
