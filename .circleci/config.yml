@@ -136,12 +136,12 @@ workflows:
       - apply-eks:
           requires:
             - apply-vpc
-      - apply-addons:
-          requires:
-            - apply-eks
+      # - apply-addons:
+      #     requires:
+      #       - apply-eks
       - plan-destroy:
           requires:
-            - apply-addons
+            - apply-eks
       - hold-destroy:
           type: approval
           requires:
