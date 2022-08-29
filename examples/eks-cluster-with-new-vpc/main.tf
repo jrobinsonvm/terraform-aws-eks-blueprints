@@ -113,8 +113,8 @@ module "vpc" {
   cidr = local.vpc_cidr
 
   azs             = local.azs
-  public_subnets  = ["subnet-0d4781b4236265008", "subnet-08a89c6042b9325b9", "subnet-09c9de9c9399bfe81"]
-  private_subnets = ["subnet-001be750ae2eff796", "subnet-012fb8263f3003266", "subnet-0c14fe32d77b16d6b"]
+  public_subnets  = ["10.0.10.0/24", "10.0.11.0/24", "10.0.12.0/24"]
+  private_subnets = ["10.0.0.0/24", "10.0.1.0/24", "10.0.2.0/24"]
 
   enable_nat_gateway   = true
   single_nat_gateway   = true
