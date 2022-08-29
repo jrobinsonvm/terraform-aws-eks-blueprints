@@ -12,7 +12,10 @@ jobs:
           command: |
             cd examples/eks-cluster-with-new-vpc
             terraform init -input=false
-            terraform plan -out tfapply
+            terraform plan -target="module.vpc" -out tfapply-vpc
+            terraform plan -target="module.eks_blueprints" -out tfapply-eks
+            terraform plan -target="module.eks_blueprints_kubernetes_addons" -out tfapply-addons
+
       - persist_to_workspace:
           root: .
           paths:
@@ -27,7 +30,7 @@ jobs:
           name: terraform-apply-vpc
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.vpc"  -auto-approve tfapply
+            terraform apply -target="module.vpc"  -auto-approve tfapply-vpc
       - persist_to_workspace:
           root: .
           paths:
@@ -43,7 +46,7 @@ jobs:
           name: terraform-apply-eks
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.eks_blueprints"   -auto-approve tfapply 
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfapply-eks
       - persist_to_workspace:
           root: .
           paths:
@@ -59,7 +62,7 @@ jobs:
           name: terraform-apply-addons
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply 
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply-addons
       - persist_to_workspace:
           root: .
           paths:
@@ -75,7 +78,10 @@ jobs:
           name: terraform create destroy plan
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -destroy -out tfdestroy  
+            terraform plan -destroy -out tfdestroy-vpc
+            terraform plan -destroy -out tfdestroy-eks
+            terraform plan -destroy -out tfdestroy-addons
+
       - persist_to_workspace:
           root: .
           paths:
@@ -91,7 +97,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.vpc"  -auto-approve tfdestroy
+            terraform apply -target="module.vpc"  -auto-approve tfdestroy-vpc
             
   destroy-eks:
     docker:
@@ -103,7 +109,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy-eks
 
   destroy-addons:
     docker:
@@ -115,7 +121,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy-addons
 
 workflows:
   version: 2
