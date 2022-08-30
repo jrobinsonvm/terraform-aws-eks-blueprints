@@ -148,6 +148,12 @@ workflows:
       - plan-destroy:
           requires:
             - apply-addons
+      - destroy-eks:
+          requires:
+            - hold-destroy
+      - destroy-vpc:
+          requires:
+            - destroy-eks
       - plan-destroy:
           requires:
             - apply-eks
