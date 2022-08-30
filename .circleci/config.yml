@@ -163,7 +163,7 @@ workflows:
             - apply-eks
       - destroy-addons:
           requires:
-            - hold-destroy
+            - hold-destroy-full
       - destroy-eks:
           requires:
             - destroy-addons
