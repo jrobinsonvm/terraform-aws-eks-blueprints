@@ -144,26 +144,10 @@ workflows:
       - hold-destroy:
           type: approval
           requires:
-            - apply-eks
-      - plan-destroy:
-          requires:
-            - apply-eks
-      - destroy-eks:
-          requires:
-            - hold-destroy
-      - destroy-vpc:
-          requires:
-            - destroy-eks
-      - hold-destroy:
-          type: approval
-          requires:
             - plan-destroy
       - plan-destroy:
           requires:
             - apply-addons
-      - destroy-addons:
-          requires:
-            - hold-destroy
       - destroy-eks:
           requires:
             - hold-destroy
