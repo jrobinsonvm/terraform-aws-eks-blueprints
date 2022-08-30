@@ -83,6 +83,31 @@ jobs:
           root: .
           paths:
             - .
+  destroy-vpc-full:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.vpc" -destroy -out tfdestroy
+            terraform apply -target="module.vpc"  -auto-approve tfdestroy
+            
+  destroy-eks-full:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints"  -destroy -out tfdestroy
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
 
   destroy-vpc:
     docker:
@@ -164,9 +189,9 @@ workflows:
       - destroy-addons:
           requires:
             - hold-destroy-full
-      - destroy-eks:
+      - destroy-eks-full:
           requires:
             - destroy-addons
-      - destroy-vpc:
+      - destroy-vpc-full:
           requires:
             - destroy-eks
