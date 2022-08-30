@@ -169,7 +169,7 @@ workflows:
       - hold-destroy:
           type: approval
           requires:
-            - plan-destroy
+            - apply-eks
       - plan-destroy:
           requires:
             - apply-addons
@@ -185,7 +185,7 @@ workflows:
             - apply-addons
       - plan-destroy:
           requires:
-            - apply-eks
+            -  hold-destroy
       - destroy-addons:
           requires:
             - hold-destroy-full
