@@ -93,6 +93,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
+            terraform plan -destroy -out tfdestroy
             terraform apply -target="module.vpc"  -auto-approve tfdestroy
             
   destroy-eks:
@@ -118,7 +119,6 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -destroy -out tfdestroy
             terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy
 
 workflows:
