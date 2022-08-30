@@ -194,4 +194,4 @@ workflows:
             - destroy-addons
       - destroy-vpc-full:
           requires:
-            - destroy-eks
+            - destroy-eks-full
