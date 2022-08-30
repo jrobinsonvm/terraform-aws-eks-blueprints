@@ -175,7 +175,7 @@ workflows:
             - apply-addons
       - destroy-eks:
           requires:
-            - hold-destroy
+            - plan-destroy
       - destroy-vpc:
           requires:
             - destroy-eks
