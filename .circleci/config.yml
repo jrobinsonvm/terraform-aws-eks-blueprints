@@ -154,6 +154,10 @@ workflows:
       - destroy-vpc:
           requires:
             - destroy-eks
+      - hold-destroy-full:
+          type: approval
+          requires:
+            - plan-destroy
       - plan-destroy:
           requires:
             - apply-eks
