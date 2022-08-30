@@ -27,6 +27,7 @@ jobs:
           name: terraform-apply-vpc
           command: |
             cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.vpc"  -out tfapply
             terraform apply -target="module.vpc"  -auto-approve tfapply
       - persist_to_workspace:
           root: .
@@ -43,7 +44,7 @@ jobs:
           name: terraform-apply-eks
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan  -out tfapply
+            terraform plan -target="module.eks_blueprints"   -out tfapply
             terraform apply -target="module.eks_blueprints"   -auto-approve tfapply
       - persist_to_workspace:
           root: .
@@ -60,7 +61,7 @@ jobs:
           name: terraform-apply-addons
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -out tfapply
+            terraform plan -target="module.eks_blueprints_kubernetes_addons" -out tfapply
             terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply
       - persist_to_workspace:
           root: .
@@ -93,7 +94,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -destroy -out tfdestroy
+            terraform plan -target="module.vpc" -destroy -out tfdestroy
             terraform apply -target="module.vpc"  -auto-approve tfdestroy
             
   destroy-eks:
@@ -106,7 +107,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
-            terraform plan -destroy -out tfdestroy
+            terraform plan -target="module.eks_blueprints"  -destroy -out tfdestroy
             terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
 
   destroy-addons:
@@ -119,6 +120,7 @@ jobs:
           name: terraform destroy
           command: |
             cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints_kubernetes_addons"   -destroy -out tfdestroy
             terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy
 
 workflows:
