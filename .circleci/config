@@ -1,0 +1,197 @@
+version: 2
+
+jobs:
+  plan-apply:
+    working_directory: /tmp/project
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - checkout
+      - run:
+          name: terraform init & plan
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform init -input=false
+            terraform plan -out tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  apply-vpc:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform-apply-vpc
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.vpc"  -out tfapply
+            terraform apply -target="module.vpc"  -auto-approve tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  apply-eks:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform-apply-eks
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints"   -out tfapply
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  apply-addons:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform-apply-addons
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints_kubernetes_addons" -out tfapply
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfapply
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+
+  plan-destroy:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform create destroy plan
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -destroy -out tfdestroy
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+  destroy-vpc-full:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.vpc" -destroy -out tfdestroy
+            terraform apply -target="module.vpc"  -auto-approve tfdestroy
+            
+  destroy-eks-full:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints"  -destroy -out tfdestroy
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
+
+  destroy-vpc:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.vpc" -destroy -out tfdestroy
+            terraform apply -target="module.vpc"  -auto-approve tfdestroy
+            
+  destroy-eks:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints"  -destroy -out tfdestroy
+            terraform apply -target="module.eks_blueprints"   -auto-approve tfdestroy
+
+  destroy-addons:
+    docker:
+      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: terraform destroy
+          command: |
+            cd examples/eks-cluster-with-new-vpc
+            terraform plan -target="module.eks_blueprints_kubernetes_addons"   -destroy -out tfdestroy
+            terraform apply -target="module.eks_blueprints_kubernetes_addons"  -auto-approve tfdestroy
+
+workflows:
+  version: 2
+  plan_approve_apply:
+    jobs:
+      - plan-apply
+      - hold-apply:
+          type: approval
+          requires:
+            - plan-apply
+      - apply-vpc:
+          requires:
+            - hold-apply
+      - apply-eks:
+          requires:
+            - apply-vpc
+      - apply-addons:
+          requires:
+            - apply-eks
+      - hold-destroy:
+          type: approval
+          requires:
+            - apply-eks
+      - plan-destroy:
+          requires:
+            - apply-addons
+      - destroy-eks:
+          requires:
+            - plan-destroy
+      - destroy-vpc:
+          requires:
+            - destroy-eks
+      - hold-destroy-full:
+          type: approval
+          requires:
+            - apply-addons
+      - plan-destroy:
+          requires:
+            -  hold-destroy
+      - destroy-addons:
+          requires:
+            - hold-destroy-full
+      - destroy-eks-full:
+          requires:
+            - destroy-addons
+      - destroy-vpc-full:
+          requires:
+            - destroy-eks-full
